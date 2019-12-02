@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhc.ocat.mobileplatform.mapper.PatchMapper">
+    <update id="enabledPatchs">
+        UPDATE patch
+        SET status = 2
+        WHERE application_id = #{applicationId}
+        AND new_version = #{versionName}
+    </update>
+</mapper>

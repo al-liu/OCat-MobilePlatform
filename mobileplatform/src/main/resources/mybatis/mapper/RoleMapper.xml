@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhc.ocat.mobileplatform.mapper.RoleMapper">
+    <sql id="permissionField">
+        p.id,
+        p.code,
+        p.name,
+        p.description,
+        p.create_time,
+        p.update_time
+    </sql>
+
+    <sql id="menuField">
+        m.id,
+        m.parent_id,
+        m.order_num,
+        m.type,
+        m.name,
+        m.icon,
+        m.href,
+        m.description,
+        m.create_time,
+        m.update_time
+    </sql>
+
+    <select id="listPermissions" resultType="Permission">
+        SELECT <include refid="permissionField" />
+        FROM permission as p
+        LEFT JOIN role_permission as rp ON rp.permission_id = p.id
+        <where>
+            rp.role_id = #{roleId}
+        </where>
+    </select>
+
+    <select id="listMenu" resultType="Menu">
+        SELECT <include refid="menuField" />
+        FROM menu as m
+        LEFT JOIN role_menu as rm ON rm.menu_id = m.id
+        <where>
+            rm.role_id = #{roleId}
+        </where>
+    </select>
+</mapper>
