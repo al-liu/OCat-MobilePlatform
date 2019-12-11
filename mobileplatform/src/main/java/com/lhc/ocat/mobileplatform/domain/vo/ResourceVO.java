@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class ResourceVO {
-    private Long id;
+    private String id;
     private Integer status;
     private String versionName;
     private Integer versionCode;
@@ -18,7 +18,7 @@ public class ResourceVO {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setVersionName(resourceDO.getVersionName());
         resourceVO.setVersionCode(resourceDO.getVersionCode());
-        resourceVO.setId(resourceDO.getId());
+        resourceVO.setId(String.valueOf(resourceDO.getId()));
         resourceVO.setStatus(resourceDO.getStatus());
         return resourceVO;
     }

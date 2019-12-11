@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class PatchVO {
-    private Long id;
+    private String id;
     private Integer status;
     private String newVersion;
     private String oldVersion;
@@ -20,7 +20,7 @@ public class PatchVO {
         patchVO.setNewVersion(patchDO.getNewVersion());
         patchVO.setOldVersion(patchDO.getOldVersion());
         patchVO.setUrl(patchDO.getUrl());
-        patchVO.setId(patchDO.getId());
+        patchVO.setId(String.valueOf(patchDO.getId()));
         patchVO.setStatus(patchDO.getStatus());
         return patchVO;
     }
