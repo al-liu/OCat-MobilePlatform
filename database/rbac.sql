@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`menu` (
   `id` BIGINT NOT NULL,
   `parent_id` BIGINT NOT NULL COMMENT '父级菜单的 id',
   `order_num` INT NOT NULL COMMENT '相同 parent_id 下的排序值',
-  `type` SMALLINT NOT NULL DEFAULT 1 COMMENT '菜单的类型，1 是菜单，2 是目录，3 是按钮',
+  `type` SMALLINT NOT NULL DEFAULT 1 COMMENT '菜单的类型，1 是菜单，2 是按钮',
   `name` VARCHAR(45) NOT NULL COMMENT '菜单名称',
   `icon` VARCHAR(255) NOT NULL COMMENT '菜单对应的图标',
   `href` VARCHAR(255) NOT NULL COMMENT '菜单的跳转链接',
