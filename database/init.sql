@@ -11,15 +11,15 @@ insert into permission (id,code,name,description) values (6, 'system:role:update
 insert into permission (id,code,name,description) values (7, 'system:role:delete', '删除系统角色', 'role DELETE');
 insert into permission (id,code,name,description) values (8, 'system:role:read', '获取系统角色', 'role GET');
 -- 系统权限
-insert into permission (id,code,name,description) values (9, 'system:permission:create', '创建权限角色', 'permission POST');
-insert into permission (id,code,name,description) values (10, 'system:permission:update', '修改权限角色', 'permission PUT');
-insert into permission (id,code,name,description) values (11, 'system:permission:delete', '删除权限角色', 'permission DELETE');
-insert into permission (id,code,name,description) values (12, 'system:permission:read', '获取权限角色', 'permission GET');
+insert into permission (id,code,name,description) values (9, 'system:permission:create', '创建系统权限', 'permission POST');
+insert into permission (id,code,name,description) values (10, 'system:permission:update', '修改系统权限', 'permission PUT');
+insert into permission (id,code,name,description) values (11, 'system:permission:delete', '删除系统权限', 'permission DELETE');
+insert into permission (id,code,name,description) values (12, 'system:permission:read', '获取系统权限', 'permission GET');
 -- 系统菜单
-insert into permission (id,code,name,description) values (13, 'system:menu:create', '创建菜单角色', 'menu POST');
-insert into permission (id,code,name,description) values (14, 'system:menu:update', '修改菜单角色', 'menu PUT');
-insert into permission (id,code,name,description) values (15, 'system:menu:delete', '删除菜单角色', 'menu DELETE');
-insert into permission (id,code,name,description) values (16, 'system:menu:read', '获取菜单角色', 'menu GET');
+insert into permission (id,code,name,description) values (13, 'system:menu:create', '创建系统菜单', 'menu POST');
+insert into permission (id,code,name,description) values (14, 'system:menu:update', '修改系统菜单', 'menu PUT');
+insert into permission (id,code,name,description) values (15, 'system:menu:delete', '删除系统菜单', 'menu DELETE');
+insert into permission (id,code,name,description) values (16, 'system:menu:read', '获取系统菜单', 'menu GET');
 -- 离线包管理
 insert into permission (id,code,name,description) values (17, 'package:publish', '上传离线包', 'package publish POST');
 insert into permission (id,code,name,description) values (18, 'package:fetch', '获取离线包', 'package fetch POST');
@@ -75,3 +75,52 @@ insert into user_role (id,user_id,role_id) values (2, 1, 2);
 insert into user_role (id,user_id,role_id) values (3, 1, 3);
 insert into user_role (id,user_id,role_id) values (4, 2, 2);
  
+--  菜单
+-- 一级菜单
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (1, 0, 1, 1, '系统管理', 'el-icon-user', '', '一级目录');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (2, 0, 2, 1, '离线包管理', 'el-icon-cherry', '', '一级目录');
+-- 二级菜单
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (3, 1, 1, 1, '用户', 'el-icon-user', '/users', '二级目录');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (4, 1, 2, 1, '角色', 'el-icon-turn-off', '/roles', '二级目录');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (5, 1, 3, 1, '权限', 'el-icon-bangzhu', '/permissions', '二级目录');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (6, 1, 4, 1, '菜单', 'el-icon-fork-spoon', '/menus', '二级目录');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (7, 2, 1, 1, '应用程序', 'el-icon-bicycle', '/applications', '二级目录');
+-- 三级按钮
+-- 用户
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (8, 3, 1, 2, '用户编辑', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (9, 3, 2, 2, '用户删除', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (10, 3, 3, 2, '用户角色分配', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (11, 3, 4, 2, '用户锁定', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (12, 3, 5, 2, '用户创建', '', '', '三级按钮');
+-- 角色
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (13, 4, 1, 2, '角色创建', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (14, 4, 2, 2, '角色编辑', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (15, 4, 3, 2, '角色删除', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (16, 4, 4, 2, '角色权限分配', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (17, 4, 5, 2, '角色菜单分配', '', '', '三级按钮');
+-- 权限
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (18, 5, 1, 2, '权限创建', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (19, 5, 2, 2, '权限编辑', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (20, 5, 3, 2, '权限删除', '', '', '三级按钮');
+-- 菜单
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (21, 6, 1, 2, '菜单创建', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (22, 6, 2, 2, '菜单编辑', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (23, 6, 3, 2, '菜单删除', '', '', '三级按钮');
+-- 应用
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (24, 7, 1, 2, '应用创建', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (25, 7, 2, 2, '应用编辑', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (26, 7, 3, 2, '应用删除', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (27, 7, 4, 2, '离线包', '', '', '三级按钮');
+-- 离线包
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (28, 27, 1, 2, '创建离线包', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (29, 27, 2, 2, '删除离线包', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (30, 27, 3, 2, '发布离线包', '', '', '三级按钮');
+insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (31, 27, 4, 2, '查看补丁包', '', '', '三级按钮');
+
+insert into role_menu (id, role_id, menu_id) values (1, 1, 1);
+insert into role_menu (id, role_id, menu_id) values (2, 1, 3);
+insert into role_menu (id, role_id, menu_id) values (3, 1, 4);
+insert into role_menu (id, role_id, menu_id) values (4, 1, 5);
+insert into role_menu (id, role_id, menu_id) values (5, 1, 6);
+insert into role_menu (id, role_id, menu_id) values (6, 2, 2);
+insert into role_menu (id, role_id, menu_id) values (7, 2, 7);
