@@ -13,9 +13,10 @@ public enum ApiErrorType implements ErrorType  {
     APP_SECRET_ERROR("300003", "应用的 App Secret 错误"),
     APP_PRE_RELEASE_ERROR("300004", "应用存在未发行版本，不能再上传新版本，请先处理未发行版本"),
     RESOURCE_NOT_FOUND_ERROR("300005", "未找到版本资源"),
-    RESOURCE_NOT_RELEASE_ERROR("300006", "不能正式发行版本资源"),
+    RESOURCE_NOT_RELEASE_ERROR("300006", "版本资源还未正式发布"),
     RESOURCE_ENABLE_NOT_FOUND_ERROR("300007", "未找到可用的版本资源"),
     RESOURCE_DISENABLE_ERROR("300008", "该版本资源还未发行"),
+    RESOURCE_RELEASE_ERROR("300009", "版本资源已经正式发布"),
     // 登录，认证
     NEED_LOGIN_ERROR("300020", "您还没有登录，请先登录！"),
     UNAUTHORIZED_ERROR("300021", "您没有权限使用该功能！"),
