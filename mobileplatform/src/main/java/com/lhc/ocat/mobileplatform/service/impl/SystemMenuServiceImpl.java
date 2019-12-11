@@ -7,13 +7,17 @@ import com.lhc.ocat.mobileplatform.exception.ApiErrorType;
 import com.lhc.ocat.mobileplatform.exception.ApiException;
 import com.lhc.ocat.mobileplatform.mapper.MenuMapper;
 import com.lhc.ocat.mobileplatform.service.SystemMenuService;
+import com.lhc.ocat.mobileplatform.util.MenuUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author lhc
@@ -55,10 +59,16 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteMenu(Long menuId) throws ApiException {
         MenuDO menuDO = menuMapper.selectById(menuId);
         if (Objects.isNull(menuDO)) {
             throw new ApiException(ApiErrorType.SYSTEM_MENU_NOT_FOUND_ERROR);
+        }
+        List<MenuDO> list = menuMapper.selectList(new LambdaQueryWrapper<MenuDO>().eq(MenuDO::getParentId, menuId));
+        for (MenuDO menu :
+                list) {
+            menuMapper.deleteById(menu.getId());
         }
         menuMapper.deleteById(menuId);
     }
@@ -71,10 +81,12 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         List<Menu> menuList = new ArrayList<>();
         for (MenuDO menuDO :
                 menuDOList) {
-            Menu menu = new Menu();
-            BeanUtils.copyProperties(menuDO, menu);
+            Menu menu = Menu.toMenu(menuDO);
             menuList.add(menu);
         }
-        return menuList;
+        // 整理菜单列表为父子级嵌套的菜单列表
+        return MenuUtil.filterMenusFromRootNode(menuList);
     }
+
+
 }
