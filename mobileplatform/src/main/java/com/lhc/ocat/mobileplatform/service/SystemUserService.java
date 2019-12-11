@@ -1,10 +1,12 @@
 package com.lhc.ocat.mobileplatform.service;
 
+import com.lhc.ocat.mobileplatform.domain.dto.Menu;
 import com.lhc.ocat.mobileplatform.domain.dto.Role;
 import com.lhc.ocat.mobileplatform.domain.dto.User;
 import com.lhc.ocat.mobileplatform.exception.ApiException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lhc
@@ -62,6 +64,14 @@ public interface SystemUserService {
     void allotRole(Long userId, Long roleId) throws ApiException;
 
     /**
+     * 分配多个角色
+     * @param userId 用户id
+     * @param roleIdList 角色id 列表
+     * @throws ApiException 业务异常
+     */
+    void allotRoles(Long userId, Set<String> roleIdList) throws ApiException;
+
+    /**
      * 设置用户是否可用
      * @param userId 用户id
      * @param enabled 是否可用
@@ -69,5 +79,11 @@ public interface SystemUserService {
      */
     void enableUser(Long userId, Integer enabled) throws ApiException;
 
-
+    /**
+     * 查询指定用户的菜单列表
+     * @param userId 用户id
+     * @return 获取menu集合
+     * @throws ApiException 业务异常
+     */
+    Set<Menu> listMenus(Long userId) throws ApiException;
 }

@@ -4,6 +4,7 @@ import com.lhc.ocat.mobileplatform.domain.dto.Menu;
 import com.lhc.ocat.mobileplatform.domain.dto.Permission;
 import com.lhc.ocat.mobileplatform.domain.dto.Role;
 import com.lhc.ocat.mobileplatform.domain.dto.User;
+import com.lhc.ocat.mobileplatform.domain.param.UserLockParam;
 import com.lhc.ocat.mobileplatform.domain.param.system.MenuParam;
 import com.lhc.ocat.mobileplatform.domain.param.system.PermissionParam;
 import com.lhc.ocat.mobileplatform.domain.param.system.RoleParam;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lhc
@@ -76,9 +79,15 @@ public class SystemManageController {
         return Result.success();
     }
 
+    @PutMapping(value = "/user/{userId:[0-9]+}/roles")
+    public Result allotRoles(@PathVariable Long userId, @RequestBody @NotNull Set<String> roleList) {
+        userService.allotRoles(userId, roleList);
+        return Result.success();
+    }
+
     @PutMapping(value = "/user/{userId:[0-9]+}/enable")
-    public Result enableUser(@PathVariable Long userId, @RequestParam Integer enabled) {
-        userService.enableUser(userId, enabled);
+    public Result enableUser(@PathVariable Long userId, @RequestBody UserLockParam userLockParam) {
+        userService.enableUser(userId, userLockParam.getEnabled());
         return Result.success();
     }
 
@@ -106,15 +115,15 @@ public class SystemManageController {
         return Result.success(list);
     }
 
-    @PutMapping(value = "/role/{roleId:[0-9]+}/permission/{permissionId:[0-9]+}")
-    public Result allotPermission(@PathVariable Long roleId, @PathVariable Long permissionId) {
-        roleService.allotPermission(roleId, permissionId);
+    @PutMapping(value = "/role/{roleId:[0-9]+}/permissions")
+    public Result allotPermissions(@PathVariable Long roleId, @RequestBody @NotNull Set<String> permissionList) {
+        roleService.allotPermissions(roleId, permissionList);
         return Result.success();
     }
 
-    @PutMapping(value = "/role/{roleId:[0-9]+}/menu/{menuId:[0-9]+}")
-    public Result allotMenu(@PathVariable Long roleId, @PathVariable Long menuId) {
-        roleService.allotMenu(roleId, menuId);
+    @PutMapping(value = "/role/{roleId:[0-9]+}/menus")
+    public Result allotMenus(@PathVariable Long roleId, @RequestBody @NotNull Set<String> menuList) {
+        roleService.allotMenus(roleId, menuList);
         return Result.success();
     }
 

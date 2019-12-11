@@ -6,6 +6,7 @@ import com.lhc.ocat.mobileplatform.domain.dto.Role;
 import com.lhc.ocat.mobileplatform.exception.ApiException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lhc
@@ -63,18 +64,18 @@ public interface SystemRoleService {
     List<Menu> listMenuByRoleId(Long roleId) throws ApiException;
 
     /**
-     * 分配权限
-     * @param roleId 角色id
-     * @param permissionId 权限id
+     * 分配多个权限
+     * @param roleId 角色 id
+     * @param permissionIdList 多个权限 id
      * @throws ApiException 业务异常
      */
-    void allotPermission(Long roleId, Long permissionId) throws ApiException;
+    void allotPermissions(Long roleId, Set<String> permissionIdList) throws ApiException;
 
     /**
-     * 分配菜单
-     * @param roleId 角色id
-     * @param menuId 菜单id
+     * 分配多个菜单
+     * @param roleId 菜单 id
+     * @param menuIdList 多个菜单 id
      * @throws ApiException 业务异常
      */
-    void allotMenu(Long roleId, Long menuId) throws ApiException;
+    void allotMenus(Long roleId, Set<String> menuIdList) throws ApiException;
 }

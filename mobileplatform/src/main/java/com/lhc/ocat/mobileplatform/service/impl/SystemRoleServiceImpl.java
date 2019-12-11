@@ -12,10 +12,10 @@ import com.lhc.ocat.mobileplatform.service.SystemRoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author lhc
@@ -33,6 +33,8 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     private RolePermissionMapper rolePermissionMapper;
     @Autowired
     private RoleMenuMapper roleMenuMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public void createRole(String code, String name, String description) throws ApiException {
@@ -56,11 +58,14 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRole(Long roleId) throws ApiException {
         RoleDO roleDO = roleMapper.selectById(roleId);
         if (Objects.isNull(roleDO)) {
             throw new ApiException(ApiErrorType.SYSTEM_ROLE_NOT_FOUND_ERROR);
         }
+        // 删除指定 roleId 的用户-角色表 中所有数据
+        userRoleMapper.delete(new LambdaQueryWrapper<UserRoleDO>().eq(UserRoleDO::getRoleId, roleId));
         roleMapper.deleteById(roleId);
     }
 
@@ -72,8 +77,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         List<Role> roleList = new ArrayList<>();
         for (RoleDO roleDO :
                 roleDOList) {
-            Role role = new Role();
-            BeanUtils.copyProperties(roleDO, role);
+            Role role = Role.toRole(roleDO);
             roleList.add(role);
         }
         return roleList;
@@ -85,8 +89,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         List<Permission> permissionList = new ArrayList<>();
         for (PermissionDO permissionDO :
                 permissionDOList) {
-            Permission permission = new Permission();
-            BeanUtils.copyProperties(permissionDO, permission);
+            Permission permission = Permission.toPermission(permissionDO);
             permissionList.add(permission);
         }
         return permissionList;
@@ -96,44 +99,60 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public List<Menu> listMenuByRoleId(Long roleId) throws ApiException {
         List<MenuDO> menuDOList = roleMapper.listMenu(roleId);
         List<Menu> menuList = new ArrayList<>();
+        List<String> parentIdList = new ArrayList<>();
         for (MenuDO menuDO :
                 menuDOList) {
-            Menu menu = new Menu();
-            BeanUtils.copyProperties(menuDO, menu);
+            Menu menu = Menu.toMenu(menuDO);
             menuList.add(menu);
+            parentIdList.add(menu.getParentId());
         }
-        return menuList;
+        // **将查询结果去掉作为其他父菜单的菜单项，用于前端组件使用**
+        return menuList.stream().filter(menu -> !parentIdList.contains(menu.getId())).collect(Collectors.toList());
     }
 
     @Override
-    public void allotPermission(Long roleId, Long permissionId) throws ApiException {
+    @Transactional(rollbackFor = Exception.class)
+    public void allotPermissions(Long roleId, Set<String> permissionIdList) throws ApiException {
         RoleDO roleDO = roleMapper.selectById(roleId);
         if (Objects.isNull(roleDO)) {
             throw new ApiException(ApiErrorType.SYSTEM_ROLE_NOT_FOUND_ERROR);
         }
-        PermissionDO permissionDO = permissionMapper.selectById(permissionId);
-        if (Objects.isNull(permissionDO)) {
-            throw new ApiException(ApiErrorType.SYSTEM_PERMISSION_NOT_FOUND_ERROR);
+        // 批量分配权限，需要先清除之前的所有权限
+        rolePermissionMapper.delete(new LambdaQueryWrapper<RolePermissionDO>().eq(RolePermissionDO::getRoleId, roleId));
+        for (String permissionId :
+                permissionIdList) {
+            PermissionDO permissionDO = permissionMapper.selectById(permissionId);
+            if (Objects.isNull(permissionDO)) {
+                throw new ApiException(ApiErrorType.SYSTEM_PERMISSION_NOT_FOUND_ERROR);
+            }
+            RolePermissionDO rolePermissionDO = RolePermissionDO.builder()
+                    .roleId(roleId)
+                    .permissionId(Long.valueOf(permissionId)).build();
+            rolePermissionMapper.insert(rolePermissionDO);
         }
-        RolePermissionDO rolePermissionDO = RolePermissionDO.builder()
-                .roleId(roleId)
-                .permissionId(permissionId).build();
-        rolePermissionMapper.insert(rolePermissionDO);
     }
 
     @Override
-    public void allotMenu(Long roleId, Long menuId) throws ApiException {
+    @Transactional(rollbackFor = Exception.class)
+    public void allotMenus(Long roleId, Set<String> menuIdList) throws ApiException {
         RoleDO roleDO = roleMapper.selectById(roleId);
         if (Objects.isNull(roleDO)) {
             throw new ApiException(ApiErrorType.SYSTEM_ROLE_NOT_FOUND_ERROR);
         }
-        MenuDO menuDO = menuMapper.selectById(menuId);
-        if (Objects.isNull(menuDO)) {
-            throw new ApiException(ApiErrorType.SYSTEM_MENU_NOT_FOUND_ERROR);
+        // 批量分配菜单，需要先清除之前的所有菜单
+        roleMenuMapper.delete(new LambdaQueryWrapper<RoleMenuDO>().eq(RoleMenuDO::getRoleId, roleId));
+        for (String menuId :
+                menuIdList) {
+            if (!menuId.equals(Menu.ROOT_PARENT_ID)) {
+                MenuDO menuDO = menuMapper.selectById(menuId);
+                if (Objects.isNull(menuDO)) {
+                    throw new ApiException(ApiErrorType.SYSTEM_MENU_NOT_FOUND_ERROR);
+                }
+                RoleMenuDO roleMenuDO = RoleMenuDO.builder()
+                        .roleId(roleId)
+                        .menuId(Long.valueOf(menuId)).build();
+                roleMenuMapper.insert(roleMenuDO);
+            }
         }
-        RoleMenuDO roleMenuDO = RoleMenuDO.builder()
-                .roleId(roleId)
-                .menuId(menuId).build();
-        roleMenuMapper.insert(roleMenuDO);
     }
 }
