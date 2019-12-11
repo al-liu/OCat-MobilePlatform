@@ -4,6 +4,7 @@ import ch.qos.logback.core.util.FileUtil;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.lhc.ocat.mobileplatform.domain.dto.Resource;
+import lombok.extern.log4j.Log4j2;
 import net.lingala.zip4j.ZipFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * @author lhc
  * @date 2019-10-23 16:40
  */
+@Log4j2
 public class DiffPackageUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(DiffPackageUtil.class);
@@ -98,7 +100,8 @@ public class DiffPackageUtil {
             boolean result = destination.getParentFile().mkdirs();
         }
         file.transferTo(destination);
-        new ZipFile(destination).extractAll(destination.getParent());
+        ZipFile zipFile = new ZipFile(destination);
+        zipFile.extractAll(destination.getParent());
     }
 
     /**
