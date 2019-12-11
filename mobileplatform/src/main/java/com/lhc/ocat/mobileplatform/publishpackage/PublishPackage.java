@@ -26,12 +26,12 @@ public interface PublishPackage {
      * @param versionName 版本号
      * @param versionCode 版本编码
      * @param applicationDO 资源包对应的应用程序
-     * @throws IOException IO异常
+     * @throws Exception 异常
      */
     void createPatchPackage(MultipartFile uploadPackage,
                             String versionName,
                             int versionCode,
-                            ApplicationDO applicationDO) throws IOException;
+                            ApplicationDO applicationDO) throws Exception;
 
     /**
      * 获取最大要比较的旧版本 ResourceDO 列表
@@ -83,6 +83,18 @@ public interface PublishPackage {
      */
     void deployOnlinePackage(String appId) throws IOException;
 
+    /**
+     * 获取线上版本地址URL
+     * @param appId 应用 appId
+     * @return url 地址
+     */
     String getOnlinePackageUrl(String appId);
 
+    /**
+     * 删除指定版本的本地资源
+     * @param resource 版本资源
+     * @param applicationDO 应用
+     * @throws IOException IO异常
+     */
+    void removeResource(Resource resource, ApplicationDO applicationDO) throws IOException;
 }

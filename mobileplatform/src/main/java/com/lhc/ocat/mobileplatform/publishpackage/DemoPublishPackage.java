@@ -115,4 +115,12 @@ public class DemoPublishPackage extends AbstractPublishPackage {
         return onlineUrl;
     }
 
+    @Override
+    public void removeResource(Resource resource, ApplicationDO applicationDO) {
+        String previewFilePath = Paths.get(prepPath, applicationDO.getAppId()).toString();
+        String patchFilePatch = Paths.get(downloadPath, applicationDO.getAppId(),resource.getVersionName()).toString();
+        DiffPackageUtil.cleanFiles(new File(previewFilePath));
+        DiffPackageUtil.cleanFiles(new File(patchFilePatch));
+    }
+
 }
