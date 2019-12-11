@@ -1,10 +1,12 @@
 package com.lhc.ocat.mobileplatform.controller;
 
 import com.lhc.ocat.mobileplatform.domain.dto.Patch;
+import com.lhc.ocat.mobileplatform.domain.dto.Resource;
 import com.lhc.ocat.mobileplatform.domain.param.FetchPackageParam;
 import com.lhc.ocat.mobileplatform.domain.param.ReleasePackageParam;
 import com.lhc.ocat.mobileplatform.domain.param.UploadPackageParam;
 import com.lhc.ocat.mobileplatform.domain.vo.PatchPackageVO;
+import com.lhc.ocat.mobileplatform.domain.vo.ResourceVO;
 import com.lhc.ocat.mobileplatform.domain.vo.Result;
 import com.lhc.ocat.mobileplatform.service.FetchPackageService;
 import com.lhc.ocat.mobileplatform.service.PublishPackageService;
@@ -38,7 +40,7 @@ public class AppPackageController {
      * @return 返回结果
      */
     @PostMapping("/publish")
-    public Result uploadPackage(@RequestParam("package") MultipartFile file,@Validated UploadPackageParam packageParam) {
+    public Result uploadPackage(@RequestPart("package") MultipartFile file, @Validated UploadPackageParam packageParam) throws Exception {
         publishPackageService.diffPublishPackage(file,
                 packageParam.getVersionName(),
                 packageParam.getVersionCode(),
@@ -61,9 +63,20 @@ public class AppPackageController {
     }
 
     @PostMapping("/release")
-    public Result releasePackage(@RequestBody @Validated ReleasePackageParam packageParam) {
+    public Result releasePackage(@RequestBody @Validated ReleasePackageParam packageParam) throws Exception {
         publishPackageService.releaseNewVersion(packageParam.getApplicationId(), packageParam.getResourceId());
         return Result.success();
     }
 
+    @PostMapping("/remove")
+    public Result removePackage(@RequestBody @Validated ReleasePackageParam packageParam) throws Exception {
+        publishPackageService.removeResource(packageParam.getApplicationId(), packageParam.getResourceId());
+        return Result.success();
+    }
+
+    @GetMapping("/latest")
+    public Result latestResource(@RequestParam Long applicationId) {
+        ResourceVO resource = publishPackageService.latestResource(applicationId);
+        return Result.success(resource);
+    }
 }
