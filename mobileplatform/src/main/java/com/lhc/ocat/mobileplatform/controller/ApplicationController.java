@@ -45,6 +45,18 @@ public class ApplicationController {
         return Result.success(application);
     }
 
+    @DeleteMapping(value = "/{id:[0-9]+}")
+    public Result deleteApp(@PathVariable Long id) {
+        applicationService.removeApplication(id);
+        return Result.success();
+    }
+
+    @GetMapping("/all")
+    public Result allApps() {
+        List<Application> list = applicationService.listApps();
+        return Result.success(list);
+    }
+
     @GetMapping("/search")
     public Result searchByKeyword(PageParam pageParam, @RequestParam String keyword) {
         PageVO<Application> pageVO = applicationService.listApplicationByKeyword(keyword, pageParam.getCurrent(), pageParam.getSize());
