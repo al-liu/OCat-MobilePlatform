@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.lhc.ocat.mobileplatform.domain.vo.Result;
 import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -57,8 +59,8 @@ public class GlobalExceptionHandler {
      * 方法参数校验
 	 * domain 实体的 javax.validation.constraints 校验，如 @NotBlank。
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    @ExceptionHandler(BindException.class)
+    public Result<?> handleMethodArgumentNotValidException(BindException e) {
     	HttpErrorType httpErrorType = HttpErrorType.ARGUMENT_NOT_VALID_ERROR;
 		FieldError fieldError = e.getBindingResult().getFieldError();
 		if (Objects.nonNull(fieldError)) {
