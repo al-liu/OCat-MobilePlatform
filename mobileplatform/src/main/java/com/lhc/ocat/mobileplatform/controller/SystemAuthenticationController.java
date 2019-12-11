@@ -1,20 +1,23 @@
 package com.lhc.ocat.mobileplatform.controller;
 
 import com.lhc.ocat.mobileplatform.domain.dos.UserDO;
+import com.lhc.ocat.mobileplatform.domain.dto.Menu;
 import com.lhc.ocat.mobileplatform.domain.dto.User;
 import com.lhc.ocat.mobileplatform.domain.vo.Result;
 import com.lhc.ocat.mobileplatform.exception.ApiErrorType;
 import com.lhc.ocat.mobileplatform.exception.ApiException;
+import com.lhc.ocat.mobileplatform.service.SystemUserService;
+import com.lhc.ocat.mobileplatform.util.MenuUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author lhc
@@ -24,6 +27,9 @@ import java.util.Objects;
 @RestController
 @Log4j2
 public class SystemAuthenticationController {
+
+    @Autowired
+    private SystemUserService userService;
 
     @GetMapping("/needLogin")
     public Result needLogin() {
@@ -55,8 +61,12 @@ public class SystemAuthenticationController {
             if (currentSubject.isAuthenticated()) {
                 log.info("用户[" + username + "]登录验证通过");
                 UserDO userDO = (UserDO) currentSubject.getPrincipal();
-                User user = new User();
-                BeanUtils.copyProperties(userDO, user);
+                User user = User.toUser(userDO);
+                // 查询用户的菜单列表并返回
+                Set<Menu> menuSet = userService.listMenus(userDO.getId());
+                List<Menu> menuList = new ArrayList<>(menuSet);
+                user.setMenuList(MenuUtil.filterMenusFromRootNode(menuList));
+                user.setButtonList(MenuUtil.filterButtons(menuList));
                 return Result.success(user);
             }
         } catch (UnknownAccountException uae) {
