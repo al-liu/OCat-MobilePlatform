@@ -63,8 +63,7 @@ public class SystemPermissionServiceImpl implements SystemPermissionService {
         List<Permission> permissionList = new ArrayList<>();
         for (PermissionDO permissionDO :
                 permissionDOList) {
-            Permission permission = new Permission();
-            BeanUtils.copyProperties(permissionDO, permission);
+            Permission permission = Permission.toPermission(permissionDO);
             permissionList.add(permission);
         }
         return permissionList;
