@@ -14,6 +14,8 @@ import java.util.Date;
 @Data
 @TableName(value = "menu")
 public class MenuDO {
+    public static final Integer MENU_TYPE = 1;
+    public static final Integer BUTTON_TYPE = 2;
     private Long id;
     private Long parentId;
     private Integer orderNum;
