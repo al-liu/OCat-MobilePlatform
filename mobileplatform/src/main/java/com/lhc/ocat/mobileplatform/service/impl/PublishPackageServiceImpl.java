@@ -8,6 +8,7 @@ import com.lhc.ocat.mobileplatform.domain.dos.ResourceDO;
 import com.lhc.ocat.mobileplatform.domain.dto.Application;
 import com.lhc.ocat.mobileplatform.domain.dto.Patch;
 import com.lhc.ocat.mobileplatform.domain.dto.Resource;
+import com.lhc.ocat.mobileplatform.domain.vo.ResourceVO;
 import com.lhc.ocat.mobileplatform.exception.*;
 import com.lhc.ocat.mobileplatform.mapper.ApplicationMapper;
 import com.lhc.ocat.mobileplatform.mapper.PatchMapper;
@@ -59,7 +60,7 @@ public class PublishPackageServiceImpl implements PublishPackageService {
                                    String versionName,
                                    int versionCode,
                                    String appId,
-                                   String appSecret) throws ApiException {
+                                   String appSecret) throws Exception {
         // 认证客户端身份
         ApplicationDO applicationDO = applicationMapper.selectOne(new LambdaQueryWrapper<ApplicationDO>()
                 .eq(ApplicationDO::getAppId, appId));
@@ -107,7 +108,7 @@ public class PublishPackageServiceImpl implements PublishPackageService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void releaseNewVersion(Long applicationId, Long resourceId) {
+    public void releaseNewVersion(Long applicationId, Long resourceId) throws Exception {
         // 验证应用是否存在
         ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
         if (Objects.isNull(applicationDO)) {
@@ -120,17 +121,48 @@ public class PublishPackageServiceImpl implements PublishPackageService {
         }
         // 验证资源是否是未发行的
         if (resourceDO.getStatus().equals(ResourceDO.RELEASE_STATUS)) {
-            throw new ApiException(ApiErrorType.RESOURCE_NOT_RELEASE_ERROR);
+            throw new ApiException(ApiErrorType.RESOURCE_RELEASE_ERROR);
         }
         resourceDO.setStatus(ResourceDO.RELEASE_STATUS);
         resourceMapper.updateById(resourceDO);
         // 更新补丁为可用
         patchMapper.enabledPatchs(applicationId, resourceDO.getVersionName());
         // 发布线上版本
-        try {
-            publishPackage.deployOnlinePackage(applicationDO.getAppId());
-        } catch (IOException e) {
-            e.printStackTrace();
+        publishPackage.deployOnlinePackage(applicationDO.getAppId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeResource(Long applicationId, Long resourceId)  throws Exception {
+        ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
+        if (Objects.isNull(applicationDO)) {
+            throw new ApiException(ApiErrorType.APP_NOT_FOUND_ERROR);
         }
+        ResourceDO resourceDO = resourceMapper.selectById(resourceId);
+        if (Objects.isNull(resourceDO)) {
+            throw new ApiException(ApiErrorType.RESOURCE_NOT_FOUND_ERROR);
+        }
+        if (resourceDO.getStatus().equals(ResourceDO.RELEASE_STATUS)) {
+            throw new ApiException(ApiErrorType.RESOURCE_RELEASE_ERROR, "该版本已经发布，不能删除！");
+        }
+        // 删除本地包资源
+        publishPackage.removeResource(Resource.toResource(resourceDO), applicationDO);
+        // 删除数据库的资源信息
+        patchMapper.delete(new LambdaQueryWrapper<PatchDO>().eq(PatchDO::getNewVersion, resourceDO.getVersionName()));
+        resourceMapper.deleteById(resourceId);
+    }
+
+    @Override
+    public ResourceVO latestResource(Long applicationId) {
+        ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
+        if (Objects.isNull(applicationDO)) {
+            throw new ApiException(ApiErrorType.APP_NOT_FOUND_ERROR);
+        }
+        Integer maxVersionCode = resourceMapper.getMaxVersionCode(applicationDO.getId());
+        ResourceDO resourceDO = resourceMapper.selectOne(new LambdaQueryWrapper<ResourceDO>()
+                .eq(ResourceDO::getVersionCode, maxVersionCode)
+                .eq(ResourceDO::getStatus, ResourceDO.RELEASE_STATUS)
+                .eq(ResourceDO::getApplicationId, applicationDO.getId()));
+        return ResourceVO.toResourceVO(resourceDO);
     }
 }
