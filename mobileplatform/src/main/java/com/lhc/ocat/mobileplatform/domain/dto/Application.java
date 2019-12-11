@@ -4,6 +4,7 @@ import com.lhc.ocat.mobileplatform.domain.dos.ApplicationDO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Setter
 @ToString
 public class Application {
-    private Long id;
+    private String id;
     /**
      * 客户端应用名称
      */
@@ -49,11 +50,8 @@ public class Application {
 
     static public Application toApplication(ApplicationDO applicationDO) {
         Application application = new Application();
-        application.setId(applicationDO.getId());
-        application.setName(applicationDO.getName());
-        application.setDescription(applicationDO.getDescription());
-        application.setAppId(applicationDO.getAppId());
-        application.setAppSecret(applicationDO.getAppSecret());
+        BeanUtils.copyProperties(applicationDO, application);
+        application.setId(String.valueOf(applicationDO.getId()));
         return application;
     }
 }
