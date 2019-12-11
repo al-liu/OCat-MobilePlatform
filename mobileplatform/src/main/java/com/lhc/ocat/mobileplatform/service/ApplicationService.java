@@ -46,6 +46,13 @@ public interface ApplicationService {
     void updateApplication(Long applicationId, String name, String description) throws ApiException;
 
     /**
+     * 删除应用程序（**该删除权限较大，会删除与应用相关的所有资源与补丁**）
+     * @param applicationId 应用程序 id
+     * @throws ApiException 业务异常
+     */
+    void removeApplication(Long applicationId) throws ApiException;
+
+    /**
      * 获取指定 id 的应用程序信息
      * @param applicationId 应用程序Id
      * @return Application
@@ -62,6 +69,12 @@ public interface ApplicationService {
      * @throws ApiException 业务接口异常
      */
     PageVO<Application> listApplicationByKeyword(String keyword, Long currentPage, Long pageSize) throws ApiException;
+
+    /**
+     * 查询全部应用程序
+     * @return 应用列表
+     */
+    List<Application> listApps();
 
     /**
      * 查询指定 applicationId 的所有版本资源信息

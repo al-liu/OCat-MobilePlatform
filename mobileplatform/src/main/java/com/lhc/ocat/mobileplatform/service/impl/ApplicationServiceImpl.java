@@ -17,11 +17,10 @@ import com.lhc.ocat.mobileplatform.mapper.ResourceMapper;
 import com.lhc.ocat.mobileplatform.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sun.plugin2.main.server.AppletID;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +83,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeApplication(Long applicationId) throws ApiException {
+        ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
+        if (Objects.isNull(applicationDO)) {
+            throw new ApiException(ApiErrorType.APP_NOT_FOUND_ERROR);
+        }
+        resourceMapper.delete(new LambdaQueryWrapper<ResourceDO>().eq(ResourceDO::getApplicationId, applicationId));
+        patchMapper.delete(new LambdaQueryWrapper<PatchDO>().eq(PatchDO::getApplicationId, applicationId));
+        applicationMapper.deleteById(applicationId);
+    }
+
+    @Override
     public Application getApplicationById(Long applicationId) throws ApiException {
         ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
         if (Objects.isNull(applicationDO)) {
@@ -121,6 +132,20 @@ public class ApplicationServiceImpl implements ApplicationService {
         pageVO.setTotal(page.getTotal());
         pageVO.setRecords(applicationList);
         return pageVO;
+    }
+
+    @Override
+    public List<Application> listApps() {
+        List<ApplicationDO> list = applicationMapper.selectList(
+                new LambdaQueryWrapper<ApplicationDO>()
+                        .orderByAsc(ApplicationDO::getCreateTime));
+        List<Application> applicationList = new ArrayList<>();
+        for (ApplicationDO appDO :
+                list) {
+            Application app = Application.toApplication(appDO);
+            applicationList.add(app);
+        }
+        return applicationList;
     }
 
     @Override
