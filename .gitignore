@@ -62,6 +62,7 @@ buildNumber.properties
 
 # Docker Dir
 docker/mysql/data/
+docker/nginx/html
 
 ### Android ###
 # Generated files
