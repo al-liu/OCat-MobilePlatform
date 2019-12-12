@@ -159,6 +159,9 @@ public class PublishPackageServiceImpl implements PublishPackageService {
             throw new ApiException(ApiErrorType.APP_NOT_FOUND_ERROR);
         }
         Integer maxVersionCode = resourceMapper.getMaxVersionCode(applicationDO.getId());
+        if (Objects.isNull(maxVersionCode)) {
+            throw new ApiException(ApiErrorType.RESOURCE_NOTHING_ERROR);
+        }
         ResourceDO resourceDO = resourceMapper.selectOne(new LambdaQueryWrapper<ResourceDO>()
                 .eq(ResourceDO::getVersionCode, maxVersionCode)
                 .eq(ResourceDO::getStatus, ResourceDO.RELEASE_STATUS)
