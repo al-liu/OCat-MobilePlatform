@@ -255,6 +255,9 @@ export default {
       if (res.success) {
         this.latestVersionName = res.data.versionName
         this.latestVersionCode = res.data.versionCode
+      } else {
+        this.latestVersionName = '暂无'
+        this.latestVersionCode = '暂无'
       }
     },
     uploadApi: async function (formData) {
