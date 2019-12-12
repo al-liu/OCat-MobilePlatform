@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-ios-demo/Pods-ios-demo-frameworks.sh
+${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework
+${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework
