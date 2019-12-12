@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["financing"],{dc62:function(n,e,t){"use strict";t.r(e);var c=function(){var n=this,e=n.$createElement;n._self._c;return n._m(0)},r=[function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("div",[t("h1",[n._v("金融首页")]),t("p",[n._v("理财产品")]),t("p",[n._v("优选基金")]),t("p",[n._v("保险")])])}],i={},l=i,u=t("2877"),a=Object(u["a"])(l,c,r,!1,null,null,null);e["default"]=a.exports}}]);
+//# sourceMappingURL=financing.77044314.js.map

@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["about"],{f820:function(t,n,e){"use strict";e.r(n);var o=function(){var t=this,n=t.$createElement,e=t._self._c||n;return e("div",[e("van-nav-bar",{attrs:{title:"关于","left-arrow":""},on:{"click-left":t.onBack}}),e("p",[t._v("这是个差量更新的测试项目")])],1)},a=[],r={methods:{onBack:function(){this.$router.go(-1)}}},c=r,l=e("2877"),u=Object(l["a"])(c,o,a,!1,null,null,null);n["default"]=u.exports}}]);
+//# sourceMappingURL=about.235d1900.js.map

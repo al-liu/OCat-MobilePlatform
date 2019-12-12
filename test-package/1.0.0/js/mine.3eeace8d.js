@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["mine"],{"6d7c":function(t,n,o){"use strict";o.r(n);var e=function(){var t=this,n=t.$createElement,o=t._self._c||n;return o("div",[o("h1",[t._v("我的首页")]),o("van-button",{attrs:{type:"primary"},on:{click:t.toAbout}},[t._v("关于")])],1)},u=[],r={methods:{toAbout:function(){this.$router.push("/about")}}},c=r,i=o("2877"),s=Object(i["a"])(c,e,u,!1,null,null,null);n["default"]=s.exports}}]);
+//# sourceMappingURL=mine.3eeace8d.js.map

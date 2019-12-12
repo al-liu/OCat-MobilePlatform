@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["life"],{e318:function(e,n,t){"use strict";t.r(n);var l=function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},r=[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",[t("h1",[e._v("生活首页")])])}],c={},u=c,i=t("2877"),s=Object(i["a"])(u,l,r,!1,null,null,null);n["default"]=s.exports}}]);
+//# sourceMappingURL=life.9a9be364.js.map

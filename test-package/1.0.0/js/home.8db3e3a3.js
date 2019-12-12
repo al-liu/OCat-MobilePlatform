@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["home"],{aa58:function(t,n,e){"use strict";e.r(n);var r=function(){var t=this,n=t.$createElement,e=t._self._c||n;return e("div",{staticClass:"home"},[e("h1",[t._v("默认首页")]),e("van-button",{attrs:{type:"primary"},on:{click:t.toTransfer}},[t._v("转账")])],1)},s=[],a={methods:{toTransfer:function(){this.$router.push("/transfer")}}},o=a,u=e("2877"),c=Object(u["a"])(o,r,s,!1,null,null,null);n["default"]=c.exports}}]);
+//# sourceMappingURL=home.8db3e3a3.js.map
