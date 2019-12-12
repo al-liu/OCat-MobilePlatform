@@ -1,0 +1,29 @@
+export default {
+  LOGIN: '/login', // 登录
+  LOGOUT: '/logout', // 登出
+  USERS_ALL: '/system/user/all', // 全部用户
+  USERS_CREATE: '/system/user', // 创建用户
+  USERS_UPDATE: '/system/user/', // 更新用户
+  USERS_DELETE: '/system/user/', // 删除用户
+  ROLES_ALL: '/system/role/all', // 全部角色
+  ROLES_CREATE: '/system/role', // 创建角色
+  ROLES_UPDATE: '/system/role/', // 更新角色
+  ROLES_DELETE: '/system/role/', // 删除角色
+  PERMISSIONS_ALL: '/system/permission/all', // 全部权限
+  MENUS_ALL: '/system/menu/all', // 全部菜单,
+  MENUS_CREATE: '/system/menu', // 创建菜单,
+  MENUS_UPDATE: '/system/menu/', // 修改菜单,
+  MENUS_DELETE: '/system/menu/', // 删除菜单,
+  PERMISSION_ALL: '/system/permission/all', // 全部权限
+  PERMISSION_CREATE: '/system/permission', // 创建权限
+  PERMISSION_UPDATE: '/system/permission/', // 更新权限
+  PERMISSION_DELETE: '/system/permission/', // 删除权限
+  APPS_ALL: '/application/all', // 全部菜单,
+  APPS_CREATE: '/application', // 创建菜单,
+  APPS_UPDATE: '/application/', // 修改菜单,
+  APPS_DELETE: '/application/', // 删除菜单,
+  PACKAGE_UPLOAD: '/package/publish', // 上传离线包
+  PACKAGE_RELEASE: '/package/release', // 发布离线包
+  PACKAGE_REMOVE: '/package/remove', // 发布离线包
+  PACKAGE_LATEST: '/package/latest' // 最新包
+}
