@@ -60,6 +60,9 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .metadata/
 
+# Docker Dir
+docker/mysql/data/
+
 ### Android ###
 # Generated files
 bin/
