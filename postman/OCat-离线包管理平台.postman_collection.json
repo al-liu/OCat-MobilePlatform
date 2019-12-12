@@ -1,0 +1,1282 @@
+{
+	"info": {
+		"_postman_id": "eb7e0593-fa7c-4550-8ca3-5736a78449b5",
+		"name": "OCat-离线包管理平台",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "认证管理",
+			"item": [
+				{
+					"name": "登录-S-administrator",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"friday\",\n\t\"password\": \"a222\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "登录-package-administrator",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"package-administrator\",\n\t\"password\": \"a321\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "未登录提示",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/needLogin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"needLogin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "未通过鉴权提示",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/unauthorized",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"unauthorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "登出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d96bf733-9b6d-408b-9bdf-5b76aa40af19",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0ba6486-e4f5-4eec-9000-9aa813f9733f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "系统管理",
+			"item": [
+				{
+					"name": "用户创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"lhc1\",\n\t\"password\":\"a111\",\n\t\"description\":\"无业游民\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户修改",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"lhc\",\n\t\"password\":\"a111\",\n\t\"description\":\"无业游民A\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/1200335477275590657",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"1200335477275590657"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户锁定",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"enabled\":2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/1200335477275590657/enable",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"1200335477275590657",
+								"enable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/1200574030991532033",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"1200574030991532033"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户查询全部",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户查询全部角色",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/1200335477275590657/roles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"1200335477275590657",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户分配角色",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/user/1200335477275590657/role/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"user",
+								"1200335477275590657",
+								"role",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"hobo:admin111\",\n\t\"name\":\"无业游民管理员\",\n\t\"description\":\"呵呵哒\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色修改",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"system:admin\",\n\t\"name\":\"系统管理员\",\n\t\"description\":\"管理 user role menu permission\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1200574713564176385",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1200574713564176385"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色查询全部",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色分配权限",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1200574641640251394/permission/1200574975754313730",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1200574641640251394",
+								"permission",
+								"1200574975754313730"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色分配菜单",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1200574641640251394/menu/1200576300600729602",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1200574641640251394",
+								"menu",
+								"1200576300600729602"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色查询全部权限",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1/permissions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "角色查询全部菜单",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/role/1200574641640251394/menus",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"role",
+								"1200574641640251394",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "权限创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"hobo:update\",\n\t\"name\":\"无业游民修改\",\n\t\"description\":\"hobo PUT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/permission",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"permission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "权限修改",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"hobo:create\",\n\t\"name\":\"无业游民创建11\",\n\t\"description\":\"hobo POST\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/permission/1200574975754313730",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"permission",
+								"1200574975754313730"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "权限删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/permission/1200575770440704001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"permission",
+								"1200575770440704001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "权限查询全部",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/permission/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"permission",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "菜单创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"parentId\":\"12\",\n\t\"orderNum\":\"12\",\n\t\"type\":\"1\",\n\t\"name\":\"系统管理12\",\n\t\"icon\":\"systemmanage.png\",\n\t\"href\":\"/systemmanage\",\n\t\"description\":\"呵呵\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/menu",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "菜单修改",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"parentId\":\"1\",\n\t\"orderNum\":\"1\",\n\t\"type\":\"1\",\n\t\"name\":\"系统管理111\",\n\t\"icon\":\"systemmanage.png\",\n\t\"href\":\"/systemmanage\",\n\t\"description\":\"呵呵\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/menu/1200576300600729602",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"menu",
+								"1200576300600729602"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "菜单删除",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/menu/1200576477784907777",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"menu",
+								"1200576477784907777"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "菜单查询全部",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/system/menu/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"system",
+								"menu",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "离线包管理",
+			"item": [
+				{
+					"name": "上传离线包",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "versionName",
+									"value": "1.0.1",
+									"type": "text"
+								},
+								{
+									"key": "versionCode",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "package",
+									"type": "file",
+									"src": "/Users/lhc/Documents/WorkSpace/Projects/OCat/test-package/1.0.1.zip"
+								},
+								{
+									"key": "appId",
+									"value": "7385262242",
+									"type": "text"
+								},
+								{
+									"key": "appSecret",
+									"value": "1034722ea56c4198840d1ccf77de4cab",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/package/publish",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"package",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取补丁包",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"versionName\": \"1.0.0\",\n\t\"appId\":\"7385262242\",\n\t\"appSecret\":\"1034722ea56c4198840d1ccf77de4cab\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/package/fetch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"package",
+								"fetch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "发布离线包",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"applicationId\": 1200316881484779521,\n\t\"resourceId\": 1201390601091571713\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/package/release",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"package",
+								"release"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "应用程序管理",
+			"item": [
+				{
+					"name": "应用创建",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"唐山银行手机银行\",\n\t\"description\": \"唐山银行移动客户端\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "应用修改",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"唐山银行手机银行\",\n\t\"description\": \"唐山银行移动客户端平台\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application/1200316881484779521",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application",
+								"1200316881484779521"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "应用详情",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application/1200316881484779521",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application",
+								"1200316881484779521"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "应用搜索",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application/search?keyword=唐山&size=10&current=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "唐山"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "current",
+									"value": "1"
+								},
+								{
+									"key": "pageParam",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "应用下的所有离线包版本",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application/1200316881484779521/resources?size=10&current=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application",
+								"1200316881484779521",
+								"resources"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "current",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "应用下的所有补丁包",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/application/1200316881484779521/resource/1.0.0/patchs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"application",
+								"1200316881484779521",
+								"resource",
+								"1.0.0",
+								"patchs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b2121055-c30d-45ed-8c7f-53c6ea1d8c4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7da1de65-9478-4c63-8cda-9053d58f6ea2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "35bd9a37-210c-46bc-8566-a2b8c46d9061",
+			"key": "baseUrl",
+			"value": "http://localhost:8800",
+			"type": "string"
+		}
+	]
+}
