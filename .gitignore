@@ -211,3 +211,14 @@ fastlane/test_output
 iOSInjectionProject/
 Example/iOS Example/iOS Example.xcodeproj/project.xcworkspace/xcuserdata/lhc.xcuserdatad/UserInterfaceState.xcuserstate
 *.xcuserstate
+
+##Android##
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
