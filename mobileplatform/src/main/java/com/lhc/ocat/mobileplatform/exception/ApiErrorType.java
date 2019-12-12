@@ -17,6 +17,7 @@ public enum ApiErrorType implements ErrorType  {
     RESOURCE_ENABLE_NOT_FOUND_ERROR("300007", "未找到可用的版本资源"),
     RESOURCE_DISENABLE_ERROR("300008", "该版本资源还未发行"),
     RESOURCE_RELEASE_ERROR("300009", "版本资源已经正式发布"),
+    RESOURCE_NOTHING_ERROR("300010", "该应用还没有可用的版本资源"),
     // 登录，认证
     NEED_LOGIN_ERROR("300020", "您还没有登录，请先登录！"),
     UNAUTHORIZED_ERROR("300021", "您没有权限使用该功能！"),
