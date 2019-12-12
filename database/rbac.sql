@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema ocat
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema ocat
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `ocat` DEFAULT CHARACTER SET utf8 ;
+USE `ocat` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`user`
+-- Table `ocat`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`user` (
+CREATE TABLE IF NOT EXISTS `ocat`.`user` (
   `id` BIGINT NOT NULL,
   `username` VARCHAR(45) NOT NULL COMMENT '用户名，唯一',
   `password` VARCHAR(255) NOT NULL COMMENT '用户密码',
@@ -35,9 +35,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`role`
+-- Table `ocat`.`role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role` (
+CREATE TABLE IF NOT EXISTS `ocat`.`role` (
   `id` BIGINT NOT NULL,
   `code` VARCHAR(45) NOT NULL COMMENT '角色编码',
   `name` VARCHAR(45) NOT NULL COMMENT '角色名称',
@@ -50,9 +50,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`permission`
+-- Table `ocat`.`permission`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`permission` (
+CREATE TABLE IF NOT EXISTS `ocat`.`permission` (
   `id` BIGINT NOT NULL,
   `code` VARCHAR(45) NOT NULL COMMENT '权限编码',
   `name` VARCHAR(45) NOT NULL COMMENT '权限名称',
@@ -65,9 +65,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`menu`
+-- Table `ocat`.`menu`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`menu` (
+CREATE TABLE IF NOT EXISTS `ocat`.`menu` (
   `id` BIGINT NOT NULL,
   `parent_id` BIGINT NOT NULL COMMENT '父级菜单的 id',
   `order_num` INT NOT NULL COMMENT '相同 parent_id 下的排序值',
@@ -83,9 +83,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`user_role`
+-- Table `ocat`.`user_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`user_role` (
+CREATE TABLE IF NOT EXISTS `ocat`.`user_role` (
   `id` BIGINT NOT NULL,
   `user_id` BIGINT NOT NULL,
   `role_id` BIGINT NOT NULL,
@@ -96,9 +96,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`role_permission`
+-- Table `ocat`.`role_permission`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role_permission` (
+CREATE TABLE IF NOT EXISTS `ocat`.`role_permission` (
   `id` BIGINT NOT NULL,
   `role_id` BIGINT NOT NULL,
   `permission_id` BIGINT NOT NULL,
@@ -109,9 +109,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`role_menu`
+-- Table `ocat`.`role_menu`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role_menu` (
+CREATE TABLE IF NOT EXISTS `ocat`.`role_menu` (
   `id` BIGINT NOT NULL,
   `role_id` BIGINT NOT NULL,
   `menu_id` BIGINT NOT NULL,
