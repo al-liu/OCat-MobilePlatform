@@ -116,7 +116,7 @@ insert into menu (id,parent_id,order_num,type,name,icon,href,description) values
 insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (29, 27, 2, 2, '删除离线包', '', '', '三级按钮');
 insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (30, 27, 3, 2, '发布离线包', '', '', '三级按钮');
 insert into menu (id,parent_id,order_num,type,name,icon,href,description) values (31, 27, 4, 2, '查看补丁包', '', '', '三级按钮');
-
+-- 角色与一二级菜单
 insert into role_menu (id, role_id, menu_id) values (1, 1, 1);
 insert into role_menu (id, role_id, menu_id) values (2, 1, 3);
 insert into role_menu (id, role_id, menu_id) values (3, 1, 4);
@@ -124,3 +124,35 @@ insert into role_menu (id, role_id, menu_id) values (4, 1, 5);
 insert into role_menu (id, role_id, menu_id) values (5, 1, 6);
 insert into role_menu (id, role_id, menu_id) values (6, 2, 2);
 insert into role_menu (id, role_id, menu_id) values (7, 2, 7);
+-- 角色与三级按钮（系统管理相关）
+insert into role_menu (id, role_id, menu_id) values (8, 1, 8);
+insert into role_menu (id, role_id, menu_id) values (9, 1, 9);
+insert into role_menu (id, role_id, menu_id) values (10, 1, 10);
+insert into role_menu (id, role_id, menu_id) values (11, 1, 11);
+insert into role_menu (id, role_id, menu_id) values (12, 1, 12);
+insert into role_menu (id, role_id, menu_id) values (13, 1, 13);
+insert into role_menu (id, role_id, menu_id) values (14, 1, 14);
+insert into role_menu (id, role_id, menu_id) values (15, 1, 15);
+insert into role_menu (id, role_id, menu_id) values (16, 1, 16);
+insert into role_menu (id, role_id, menu_id) values (17, 1, 17);
+insert into role_menu (id, role_id, menu_id) values (18, 1, 18);
+insert into role_menu (id, role_id, menu_id) values (19, 1, 19);
+insert into role_menu (id, role_id, menu_id) values (20, 1, 20);
+insert into role_menu (id, role_id, menu_id) values (21, 1, 21);
+insert into role_menu (id, role_id, menu_id) values (22, 1, 22);
+insert into role_menu (id, role_id, menu_id) values (23, 1, 23);
+-- 角色与三级按钮（应用程序）
+insert into role_menu (id, role_id, menu_id) values (24, 3, 24);
+insert into role_menu (id, role_id, menu_id) values (25, 3, 25);
+insert into role_menu (id, role_id, menu_id) values (26, 3, 26);
+insert into role_menu (id, role_id, menu_id) values (27, 3, 27);
+-- 角色与三级按钮（离线包）
+insert into role_menu (id, role_id, menu_id) values (28, 2, 28);
+insert into role_menu (id, role_id, menu_id) values (29, 2, 29);
+insert into role_menu (id, role_id, menu_id) values (30, 2, 30);
+insert into role_menu (id, role_id, menu_id) values (31, 2, 31);
+-- 应用管理员 需要外层的离线包管理，应用程序两个菜单
+insert into role_menu (id, role_id, menu_id) values (32, 3, 2);
+insert into role_menu (id, role_id, menu_id) values (33, 3, 7);
+-- 离线包管理需要 应用程序页面的离线包按钮才能进入下一页
+insert into role_menu (id, role_id, menu_id) values (34, 2, 27);
