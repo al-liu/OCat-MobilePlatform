@@ -10,6 +10,7 @@ import com.lhc.ocat.mobileplatform.domain.dto.Patch;
 import com.lhc.ocat.mobileplatform.domain.dto.Resource;
 import com.lhc.ocat.mobileplatform.mapper.PatchMapper;
 import com.lhc.ocat.mobileplatform.mapper.ResourceMapper;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ import java.util.Objects;
  * @author lhc
  * @date 2019-11-01 16:17
  */
+@Log4j2
 public class DemoPublishPackage extends AbstractPublishPackage {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoPublishPackage.class);
@@ -90,7 +92,7 @@ public class DemoPublishPackage extends AbstractPublishPackage {
             toMoveFile.getParentFile().mkdirs();
         }
         Files.move(zipPackageFile, toMoveFile);
-        return "http://192.168.1.108:8080/"
+        return "http://192.168.1.104:8080/"
                 + "download/packages/"
                 + applicationDO.getAppId()
                 + "/" + versionName
@@ -100,12 +102,20 @@ public class DemoPublishPackage extends AbstractPublishPackage {
     @Override
     public void deployPrepOnlinePackage(File versionFile, ApplicationDO applicationDO) {
         String previewFilePath = Paths.get(prepPath, applicationDO.getAppId()).toString();
+        File previewFile = new File(previewFilePath);
+        if (previewFile.exists()) {
+            DiffPackageUtil.cleanFiles(previewFile);
+        }
         DiffPackageUtil.copyFiles(versionFile.getPath(), previewFilePath);
     }
 
     @Override
     public void deployOnlinePackage(String appId) {
         String onlineFilePath = Paths.get(onlinePath, appId).toString();
+        File onlineFile = new File(onlineFilePath);
+        if (onlineFile.exists()) {
+            DiffPackageUtil.cleanFiles(onlineFile);
+        }
         String previewFilePath = Paths.get(prepPath, appId).toString();
         DiffPackageUtil.copyFiles(previewFilePath, onlineFilePath);
     }
@@ -120,6 +130,16 @@ public class DemoPublishPackage extends AbstractPublishPackage {
         String previewFilePath = Paths.get(prepPath, applicationDO.getAppId()).toString();
         String patchFilePatch = Paths.get(downloadPath, applicationDO.getAppId(),resource.getVersionName()).toString();
         DiffPackageUtil.cleanFiles(new File(previewFilePath));
+        DiffPackageUtil.cleanFiles(new File(patchFilePatch));
+    }
+
+    @Override
+    public void removeAllResource(ApplicationDO applicationDO) {
+        String previewFilePath = Paths.get(prepPath, applicationDO.getAppId()).toString();
+        String onlineFilePath = Paths.get(onlinePath, applicationDO.getAppId()).toString();
+        String patchFilePatch = Paths.get(downloadPath, applicationDO.getAppId()).toString();
+        DiffPackageUtil.cleanFiles(new File(previewFilePath));
+        DiffPackageUtil.cleanFiles(new File(onlineFilePath));
         DiffPackageUtil.cleanFiles(new File(patchFilePatch));
     }
 

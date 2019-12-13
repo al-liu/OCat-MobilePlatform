@@ -97,4 +97,11 @@ public interface PublishPackage {
      * @throws IOException IO异常
      */
     void removeResource(Resource resource, ApplicationDO applicationDO) throws IOException;
+
+    /**
+     * 删除指定应用下的所有本地资源
+     * @param applicationDO 应用
+     * @throws IOException IO异常
+     */
+    void removeAllResource(ApplicationDO applicationDO) throws IOException;
 }

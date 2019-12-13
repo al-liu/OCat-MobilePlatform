@@ -46,7 +46,7 @@ public class ApplicationController {
     }
 
     @DeleteMapping(value = "/{id:[0-9]+}")
-    public Result deleteApp(@PathVariable Long id) {
+    public Result deleteApp(@PathVariable Long id) throws Exception {
         applicationService.removeApplication(id);
         return Result.success();
     }

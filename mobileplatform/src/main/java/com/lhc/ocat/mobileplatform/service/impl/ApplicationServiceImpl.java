@@ -14,7 +14,9 @@ import com.lhc.ocat.mobileplatform.exception.ApiException;
 import com.lhc.ocat.mobileplatform.mapper.ApplicationMapper;
 import com.lhc.ocat.mobileplatform.mapper.PatchMapper;
 import com.lhc.ocat.mobileplatform.mapper.ResourceMapper;
+import com.lhc.ocat.mobileplatform.publishpackage.PublishPackage;
 import com.lhc.ocat.mobileplatform.service.ApplicationService;
+import com.lhc.ocat.mobileplatform.service.PublishPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ResourceMapper resourceMapper;
     @Autowired
     private PatchMapper patchMapper;
+    @Autowired
+    private PublishPackage publishPackage;
 
     @Override
     public String signup(String name, String description) throws ApiException {
@@ -84,11 +88,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeApplication(Long applicationId) throws ApiException {
+    public void removeApplication(Long applicationId) throws Exception {
         ApplicationDO applicationDO = applicationMapper.selectById(applicationId);
         if (Objects.isNull(applicationDO)) {
             throw new ApiException(ApiErrorType.APP_NOT_FOUND_ERROR);
         }
+        publishPackage.removeAllResource(applicationDO);
         resourceMapper.delete(new LambdaQueryWrapper<ResourceDO>().eq(ResourceDO::getApplicationId, applicationId));
         patchMapper.delete(new LambdaQueryWrapper<PatchDO>().eq(PatchDO::getApplicationId, applicationId));
         applicationMapper.deleteById(applicationId);

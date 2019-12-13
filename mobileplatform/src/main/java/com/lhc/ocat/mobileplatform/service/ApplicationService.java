@@ -50,7 +50,7 @@ public interface ApplicationService {
      * @param applicationId 应用程序 id
      * @throws ApiException 业务异常
      */
-    void removeApplication(Long applicationId) throws ApiException;
+    void removeApplication(Long applicationId) throws Exception;
 
     /**
      * 获取指定 id 的应用程序信息
