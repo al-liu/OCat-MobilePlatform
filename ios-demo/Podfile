@@ -4,4 +4,6 @@ use_frameworks!
 target 'ios-demo' do
   pod "GCDWebServer", "~> 3.4.2"
   pod 'SSZipArchive'
+  pod 'CocoaLumberjack'
+  pod 'SVProgressHUD'
 end
