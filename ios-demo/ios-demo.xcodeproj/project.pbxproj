@@ -19,6 +19,8 @@
 		E3001DC6236FD8CF003AA1E4 /* ios_demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3001DC5236FD8CF003AA1E4 /* ios_demoUITests.m */; };
 		E3AF4A632371716E0043722F /* pre-package in Resources */ = {isa = PBXBuildFile; fileRef = E3AF4A622371716E0043722F /* pre-package */; };
 		E3AF4A67237173A70043722F /* OCatPackageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3AF4A66237173A70043722F /* OCatPackageManager.m */; };
+		E3BF724A23A2438E0014E65A /* OCatConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BF724923A2438E0014E65A /* OCatConfiguration.m */; };
+		E3BF724D23A320340014E65A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3BF724C23A320340014E65A /* WebViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,10 @@
 		E3AF4A622371716E0043722F /* pre-package */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "pre-package"; sourceTree = "<group>"; };
 		E3AF4A65237173A70043722F /* OCatPackageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCatPackageManager.h; sourceTree = "<group>"; };
 		E3AF4A66237173A70043722F /* OCatPackageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCatPackageManager.m; sourceTree = "<group>"; };
+		E3BF724823A2438E0014E65A /* OCatConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCatConfiguration.h; sourceTree = "<group>"; };
+		E3BF724923A2438E0014E65A /* OCatConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCatConfiguration.m; sourceTree = "<group>"; };
+		E3BF724B23A320340014E65A /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		E3BF724C23A320340014E65A /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +137,8 @@
 				E3001D9F236FD8CE003AA1E4 /* AppDelegate.m */,
 				E3001DA1236FD8CE003AA1E4 /* SceneDelegate.h */,
 				E3001DA2236FD8CE003AA1E4 /* SceneDelegate.m */,
+				E3BF724B23A320340014E65A /* WebViewController.h */,
+				E3BF724C23A320340014E65A /* WebViewController.m */,
 				E3001DA4236FD8CE003AA1E4 /* ViewController.h */,
 				E3001DA5236FD8CE003AA1E4 /* ViewController.m */,
 				E3001DA7236FD8CE003AA1E4 /* Main.storyboard */,
@@ -165,6 +173,8 @@
 			children = (
 				E3AF4A65237173A70043722F /* OCatPackageManager.h */,
 				E3AF4A66237173A70043722F /* OCatPackageManager.m */,
+				E3BF724823A2438E0014E65A /* OCatConfiguration.h */,
+				E3BF724923A2438E0014E65A /* OCatConfiguration.m */,
 			);
 			path = ocat;
 			sourceTree = "<group>";
@@ -353,10 +363,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3001DA6236FD8CE003AA1E4 /* ViewController.m in Sources */,
+				E3BF724D23A320340014E65A /* WebViewController.m in Sources */,
 				E3001DA0236FD8CE003AA1E4 /* AppDelegate.m in Sources */,
 				E3AF4A67237173A70043722F /* OCatPackageManager.m in Sources */,
 				E3001DB1236FD8CF003AA1E4 /* main.m in Sources */,
 				E3001DA3236FD8CE003AA1E4 /* SceneDelegate.m in Sources */,
+				E3BF724A23A2438E0014E65A /* OCatConfiguration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
