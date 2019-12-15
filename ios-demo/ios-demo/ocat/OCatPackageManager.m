@@ -19,13 +19,15 @@ static NSString *const kAllPrePackagePath = @"pre-package";
 static NSString *const kZipSuffix = @".zip";
 static NSString *const kActivePackageVersionUDKey = @"ACTIVE_PACKAGE_VERSION";
 
+static NSString *const OCatErrorDomain = @"OCatErrorDomain";
+
 #if DEBUG
     static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 #else
     static const DDLogLevel ddLogLevel = DDLogLevelInfo;
 #endif
 
-@interface OCatPackageManager () {
+@interface OCatPackageManager () <NSURLSessionDownloadDelegate> {
     GCDWebServer *_webServer;
     
     NSString *_sandboxDocumentPath;
@@ -42,13 +44,14 @@ static NSString *const kActivePackageVersionUDKey = @"ACTIVE_PACKAGE_VERSION";
 @property (nonatomic, readwrite, copy) NSString *activePackageVersion;
 @property (nonatomic, readwrite, copy) NSString *offlinePackageServer;
 
+@property (nonatomic, copy)  void(^downloadCompletionHandler) (NSURL * _Nullable location);
+@property (nonatomic, assign) NSUInteger downloadTaskIdentifier;
 @end
 
 @implementation OCatPackageManager
 
 static OCatPackageManager *_instance = nil;
-+ (instancetype)initialization:(OCatConfiguration *)configuration
-{
++ (instancetype)manageWithConfiguration:(OCatConfiguration *)configuration {
     OCatPackageManager *pm = [OCatPackageManager sharedInstance];
     pm.configuration = configuration;
     return pm;
@@ -94,7 +97,11 @@ static OCatPackageManager *_instance = nil;
         NSString *sandboxActiveVersionPath = [_sandboxWebPath stringByAppendingPathComponent:_activePackageVersion];
         BOOL versionPathExist = [_fileManager fileExistsAtPath:sandboxActiveVersionPath];
         if (versionPathExist) {
-            [self ocat_startWebServer:sandboxActiveVersionPath];
+            NSError *webServerError;
+            [self ocat_startWebServer:sandboxActiveVersionPath withError:&webServerError];
+            if (!webServerError) {
+                [self ocat_delegateDidFinishLaunching];
+            }
         } else {
             [_userDefaults removeObjectForKey:kActivePackageVersionUDKey];
             [_userDefaults synchronize];
@@ -129,6 +136,7 @@ static OCatPackageManager *_instance = nil;
                                                       error:&createWebPathError];
     if (createWebPathError) {
         DDLogError(@"使用预置包错误，web 目录创建失败，error:%@", createWebPathError);
+        [self ocat_delegateDidFailLaunchingWithError:createWebPathError];
         return;
     }
     // 创建 web 目录 END
@@ -146,6 +154,7 @@ static OCatPackageManager *_instance = nil;
                                                  error:&copyError];
         if (copyError) {
             DDLogError(@"使用预置包错误，复制预置包到 web 目录失败，error:%@", copyError);
+            [self ocat_delegateDidFailLaunchingWithError:copyError];
             return;
         }
         if (copyResult) {
@@ -158,6 +167,15 @@ static OCatPackageManager *_instance = nil;
                 BOOL prePackageVersionPathExist = [_fileManager fileExistsAtPath:prePackageVersionPath];
                 if (!prePackageVersionPathExist) {
                     DDLogError(@"使用预置包错误，指定的预置包版本号与预置的压缩包文件名不符！");
+                    NSDictionary *userInfo = @{
+                      NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器启动失败", nil),
+                      NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"解压后的预置包文件夹名称与指定的预置版本号不符", nil),
+                      NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"请将预置包文件夹按照预置版本号命名后，压缩成 all.zip 包放到 pre-package 目录再重试。", nil)
+                                              };
+                    NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                                         code:-1
+                                                     userInfo:userInfo];
+                    [self ocat_delegateDidFailLaunchingWithError:error];
                     return;
                 }
                 DDLogInfo(@"🍺使用预置包完成，开始启动离线版本服务。");
@@ -165,9 +183,22 @@ static OCatPackageManager *_instance = nil;
                 [_userDefaults setObject:_activePackageVersion
                                   forKey:kActivePackageVersionUDKey];
                 [_userDefaults synchronize];
-                [self ocat_startWebServer:prePackageVersionPath];
+                NSError *webServerError;
+                [self ocat_startWebServer:prePackageVersionPath withError:&webServerError];
+                if (!webServerError) {
+                    [self ocat_delegateDidFinishLaunching];
+                }
             } else {
                 DDLogError(@"使用预置包错误，解压缩预置包失败！");
+                NSDictionary *userInfo = @{
+                  NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器启动失败", nil),
+                  NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"预置压缩包解压缩失败", nil),
+                  NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"请按照规范内置好压缩包后再重试。", nil)
+                                          };
+                NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                                     code:-2
+                                                 userInfo:userInfo];
+                [self ocat_delegateDidFailLaunchingWithError:error];
                 return;
             }
             // 删除 web 目录下的预置包
@@ -176,12 +207,13 @@ static OCatPackageManager *_instance = nil;
                                      error:&removeError];
             if (removeError) {
                 DDLogError(@"删除 web 目录下的全量预置包失败，error:%@", removeError);
+                [self ocat_delegateDidFailLaunchingWithError:removeError];
             }
         }
     }
 }
 
-- (void)ocat_startWebServer:(NSString *)path {
+- (void)ocat_startWebServer:(NSString *)path withError:(NSError * __autoreleasing *)error{
     DDLogInfo(@"启动离线包 web 服务...");
     NSUInteger cacheAge = 5; // 10 min
     NSNumber *port = @8866;
@@ -196,6 +228,7 @@ static OCatPackageManager *_instance = nil;
                            error:&serverStartError];
     if (serverStartError) {
         DDLogInfo(@"启动离线版本服务失败，error:%@", serverStartError);
+        *error = serverStartError;
     } else {
         DDLogInfo(@"启动离线包 web 服务完成");
     }
@@ -213,6 +246,7 @@ static OCatPackageManager *_instance = nil;
                                                            error:&paramsError];
     if (paramsError) {
         DDLogError(@"更新补丁包失败，jsonObject 转换错误:%@", paramsError);
+        [self ocat_delegateDidFailUpdateWithError:paramsError];
         return;
     }
     NSURLSession *urlSession = [NSURLSession sharedSession];
@@ -229,6 +263,7 @@ static OCatPackageManager *_instance = nil;
                 NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&serializationError];
                 if (serializationError) {
                     DDLogError(@"更新补丁包失败，response json 转换错误:%@", serializationError);
+                    [self ocat_delegateDidFailUpdateWithError:serializationError];
                 } else {
                     DDLogInfo(@"更新补丁请求结果:%@", responseObject);
                     NSString *resultCode = responseObject[@"code"];
@@ -249,19 +284,48 @@ static OCatPackageManager *_instance = nil;
                             }];
                         } else {
                             DDLogInfo(@"当前已是最新版本，无需更新。");
+                            NSDictionary *userInfo = @{
+                              NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器更新失败", nil),
+                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"当前已是最新版本，无需更新。", nil),
+                              NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"无需更新", nil)
+                                                      };
+                            NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                                                 code:-5
+                                                             userInfo:userInfo];
+                            [self ocat_delegateDidFailUpdateWithError:error];
                         }
                     } else {
                         NSString *resultMessage = responseObject[@"message"];
                         DDLogError(@"更新补丁包请求失败, message:%@", resultMessage);
+                        NSString *reason = [NSString stringWithFormat:@"检查更新接口报错，%@", resultMessage];
+                        NSDictionary *userInfo = @{
+                          NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器更新失败", nil),
+                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(reason, nil),
+                          NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"请重试", nil)
+                                                  };
+                        NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                                             code:-4
+                                                         userInfo:userInfo];
+                        [self ocat_delegateDidFailUpdateWithError:error];
                     }
                 }
             } else {
                 DDLogError(@"更新补丁包请求失败，error:%@", error);
+                [self ocat_delegateDidFailUpdateWithError:error];
             }
         }];
         [dataTask resume];
     } else {
         DDLogError(@"更新补丁包失败，配置 serverBaseUrl 不合法！");
+        NSDictionary *userInfo = @{
+          NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器更新失败", nil),
+          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"配置类的 serverBaseUrl 不合法", nil),
+          NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"请检查 serverBaseUrl 后重试", nil)
+                                  };
+        NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                             code:-3
+                                         userInfo:userInfo];
+        [self ocat_delegateDidFailUpdateWithError:error];
     }
 }
 
@@ -269,7 +333,9 @@ static OCatPackageManager *_instance = nil;
                  completionHandler:(void (^)(NSURL * _Nullable location))completionHandler {
     DDLogInfo(@"开始下载补丁包...");
     NSURL *downloadUrl = [NSURL URLWithString:url];
-    NSURLSession *urlSession = [NSURLSession sharedSession];
+    
+    NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    /*
     NSURLSessionDownloadTask *downloadTask = [urlSession downloadTaskWithURL:downloadUrl
                                                            completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (!error) {
@@ -277,9 +343,43 @@ static OCatPackageManager *_instance = nil;
             completionHandler(location);
         } else {
             DDLogError(@"更新补丁包下载失败，error:%@", error);
+            [self ocat_delegateDidFailUpdateWithError:error];
         }
     }];
+     */
+    self.downloadCompletionHandler = completionHandler;
+    NSURLSessionDownloadTask *downloadTask = [urlSession downloadTaskWithURL:downloadUrl];
+    self.downloadTaskIdentifier = downloadTask.taskIdentifier;
     [downloadTask resume];
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+      didWriteData:(int64_t)bytesWritten
+ totalBytesWritten:(int64_t)totalBytesWritten
+totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    if (downloadTask.taskIdentifier == self.downloadTaskIdentifier) {
+        float progress = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
+        NSLog(@"下载进度:%f", progress);
+        [self ocat_delegateDownloadPatchProgress:progress];
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+didFinishDownloadingToURL:(NSURL *)location {
+    if (downloadTask.taskIdentifier == self.downloadTaskIdentifier) {
+        if (self.downloadCompletionHandler) {
+            self.downloadCompletionHandler(location);
+        }
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error) {
+        if (task.taskIdentifier == self.downloadTaskIdentifier) {
+            DDLogError(@"更新补丁包下载失败，error:%@", error);
+            [self ocat_delegateDidFailUpdateWithError:error];
+        }
+    }
 }
 
 - (void)ocat_mergePath:(NSURL *)patchTempLocation
@@ -306,6 +406,7 @@ static OCatPackageManager *_instance = nil;
                                                             error:&createPathError];
     if (createPathError) {
         DDLogError(@"补丁包合并失败，patch 目录创建错误，error:%@", createPathError);
+        [self ocat_delegateDidFailUpdateWithError:createPathError];
         return;
     }
     // 开始创建 patch 目录 END
@@ -317,6 +418,7 @@ static OCatPackageManager *_instance = nil;
         [self->_fileManager moveItemAtURL:patchTempLocation toURL:destination error:&moveItemError];
         if (moveItemError) {
             DDLogError(@"补丁包合并失败，移动下载包失败，error:%@", moveItemError);
+            [self ocat_delegateDidFailUpdateWithError:moveItemError];
             return;
         }
         // 解压缩下载补丁包
@@ -326,6 +428,15 @@ static OCatPackageManager *_instance = nil;
             // 解压缩下载补丁包成功
         } else {
             DDLogError(@"补丁包合并失败，解压缩下载的补丁包失败!");
+            NSDictionary *userInfo = @{
+              NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器更新失败", nil),
+              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"下载后的补丁包解压失败", nil),
+              NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"请检查后台下发的补丁包是否能正常解压缩", nil)
+                                      };
+            NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                                 code:-6
+                                             userInfo:userInfo];
+            [self ocat_delegateDidFailUpdateWithError:error];
             return;
         }
         // 将 web(./www) 目录中当前版本的代码，复制一份到以新版本号命名的文件夹中一份。 e.g. 当前 1.0.0/** COPY TO 新版 1.0.1/**
@@ -350,6 +461,7 @@ static OCatPackageManager *_instance = nil;
             [self->_fileManager removeItemAtPath:targetPath error:&removeItemError];
             if (removeItemError) {
                 DDLogError(@"合并补丁，删除旧资源时发生错误,error:%@", removeItemError);
+                [self ocat_delegateDidFailUpdateWithError:removeItemError];
                 return ;
             }
         }];
@@ -363,6 +475,7 @@ static OCatPackageManager *_instance = nil;
             [self->_fileManager copyItemAtPath:targetPath toPath:descPath error:&copyItemError];
             if (copyItemError) {
                 DDLogError(@"合并补丁，变更旧资源为新资源时发生错误,error:%@", copyItemError);
+                [self ocat_delegateDidFailUpdateWithError:copyItemError];
                 return ;
             }
         }];
@@ -377,9 +490,43 @@ static OCatPackageManager *_instance = nil;
         }
         [self->_webServer removeAllHandlers];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self ocat_startWebServer:baseDescPath];
+            NSError *webServerError;
+            [self ocat_startWebServer:baseDescPath withError:&webServerError];
+            if (!webServerError) {
+                [self ocat_delegateDidFinishUpdate];
+            }
             NSLog(@"🔥新服务启动完成");
         });
+    }
+}
+
+- (void)ocat_delegateDidFinishLaunching {
+    if (_delegate && [_delegate respondsToSelector:@selector(packageManagerDidFinishLaunching:)]) {
+        [_delegate packageManagerDidFinishLaunching:self];
+    }
+}
+
+- (void)ocat_delegateDidFailLaunchingWithError:(NSError *)error {
+    if (_delegate && [_delegate respondsToSelector:@selector(packageManagerDidFailLaunching:withError:)]) {
+        [_delegate packageManagerDidFailLaunching:self withError:error];
+    }
+}
+
+- (void)ocat_delegateDidFinishUpdate {
+    if (_delegate && [_delegate respondsToSelector:@selector(packageManagerDidFinishUpdate:)]) {
+        [_delegate packageManagerDidFinishUpdate:self];
+    }
+}
+
+- (void)ocat_delegateDidFailUpdateWithError:(NSError *)error {
+    if (_delegate && [_delegate respondsToSelector:@selector(packageManagerDidFailUpdate:withError:)]) {
+        [_delegate packageManagerDidFailUpdate:self withError:error];
+    }
+}
+
+- (void)ocat_delegateDownloadPatchProgress:(float)progress {
+    if (_delegate && [_delegate respondsToSelector:@selector(packageManagerDownloadPatchProgress:)]) {
+        [_delegate packageManagerDownloadPatchProgress:progress];
     }
 }
 

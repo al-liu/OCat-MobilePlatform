@@ -10,6 +10,35 @@
 #import "OCatConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@class OCatPackageManager;
+@protocol OCatPackageManagerDelegate <NSObject>
+@optional
+
+/// 包管理器完成启动的回调方法
+/// @param packageManager 管理器对象
+- (void)packageManagerDidFinishLaunching:(OCatPackageManager *)packageManager;
+
+/// 包管理器启动失败的回调方法
+/// @param packageManager 管理器对象
+/// @param error 错误对象
+- (void)packageManagerDidFailLaunching:(OCatPackageManager *)packageManager
+                             withError:(NSError *)error;
+
+/// 包管理器更新补丁完成的回调方法
+/// @param packageManager 管理器对象
+- (void)packageManagerDidFinishUpdate:(OCatPackageManager *)packageManager;
+
+/// 包管理器更新补丁失败的回调方法
+/// @param packageManager 管理器对象
+/// @param error 错误对象
+- (void)packageManagerDidFailUpdate:(OCatPackageManager *)packageManager
+                          withError:(NSError *)error;
+
+/// 包管理器更新补丁包下载进度的回调方法
+/// @param progress 进度值 0-1
+- (void)packageManagerDownloadPatchProgress:(float)progress;
+
+@end
 
 /**
  如果初始化 OCatPackageManager 没有提供 OCatConfiguration 配置类，
@@ -26,10 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 离线版本访问地址
 @property (nonatomic, readonly, copy) NSString *offlinePackageServer;
 
+@property (nonatomic, weak) id <OCatPackageManagerDelegate> delegate;
+
 /// 单例初始化方法
 /// @param configuration 配置类
-+ (instancetype)initialization:(OCatConfiguration *)configuration;
-
++ (instancetype)manageWithConfiguration:(OCatConfiguration *)configuration;
 /// 共享实例
 + (instancetype)sharedInstance;
 

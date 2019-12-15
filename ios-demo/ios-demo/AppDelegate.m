@@ -25,7 +25,7 @@
                                                               appSecret:@"c9663f262eb24fe3a859f0113c98efca"
                                                           serverBaseUrl:@"http://localhost:8800"
                                                   inbuiltPackageVersion:@"1.0.0"];
-    OCatPackageManager *packageManager = [OCatPackageManager initialization:configuration];
+    OCatPackageManager *packageManager = [OCatPackageManager manageWithConfiguration:configuration];
     [packageManager launch];
 
     return YES;
