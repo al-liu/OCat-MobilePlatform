@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">android-demo</string>
+    <string name="inbuilt_version_text">内置版本:</string>
+    <string name="current_version_text">当前版本:</string>
+    <string name="offline_version_text">查看当前离线版本</string>
+    <string name="online_version_text">查看当前线上版本</string>
+    <string name="update_patch_text">下载差量补丁包</string>
+    <string name="clear_cache_text">清除缓存</string>
 </resources>
