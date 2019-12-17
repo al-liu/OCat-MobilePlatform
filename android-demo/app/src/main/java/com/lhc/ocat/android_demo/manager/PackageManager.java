@@ -1,6 +1,8 @@
 package com.lhc.ocat.android_demo.manager;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.yanzhenjie.andserver.AndServer;
@@ -32,6 +34,8 @@ public class PackageManager {
     private static final String ALL_PACKAGE_NAME = "all.zip";
     public static String INBUILT_PACKAGE_ASSETS_PATH = "pre-package/";
 
+    private static final int OFFLINE_SERVER_PORT = 8866;
+
     private Server mServer;
     private boolean isRestartWebServer;
     private PackageSettings settings;
@@ -40,6 +44,8 @@ public class PackageManager {
     private static final int WEB_SERVER_START_TYPE_RESET = 0;
     private static final int WEB_SERVER_START_TYPE_LAUNCH = 1;
     private static final int WEB_SERVER_START_TYPE_UPDATE = 2;
+
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private PackageManager() {
     }
@@ -72,6 +78,14 @@ public class PackageManager {
 
     public void setCallback(Callback callback) {
         this.callback = callback;
+    }
+
+    public String getActivePackageVersion(Context context) {
+        return FileUtils.getActivePackageVersion(context);
+    }
+
+    public String getOfflineServerUrl() {
+        return "http://127.0.0.1:"+OFFLINE_SERVER_PORT;
     }
 
     public void launch(Context context) {
@@ -340,7 +354,7 @@ public class PackageManager {
         if (mServer == null) {
             mServer = AndServer.serverBuilder(context)
                     .inetAddress(NetUtils.getLocalIPAddress())
-                    .port(8887)
+                    .port(OFFLINE_SERVER_PORT)
                     .timeout(10, TimeUnit.SECONDS)
                     .listener(new Server.ServerListener() {
                         @Override
@@ -356,7 +370,7 @@ public class PackageManager {
 
                         @Override
                         public void onStopped() {
-                            Log.i(TAG, "App Web Server 已停止:"+mServer.getInetAddress().getHostAddress());
+                            Log.i(TAG, "App Web Server 已停止");
                             if (isRestartWebServer) {
                                 isRestartWebServer = false;
                                 Log.i(TAG, "B开始重新启动 web server");
@@ -409,26 +423,50 @@ public class PackageManager {
     }
 
     private void onLaunchFinished() {
-        if (this.callback != null) {
-            this.callback.onLaunchFinished(this);
-        }
+        final PackageManager pm = PackageManager.sharedInstance();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.onLaunchFinished(pm);
+                }
+            }
+        });
     }
 
-    private void onLaunchError(PackageError error) {
-        if (this.callback != null) {
-            this.callback.onLaunchError(this, error);
-        }
+    private void onLaunchError(final PackageError error) {
+        final PackageManager pm = PackageManager.sharedInstance();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.onLaunchError(pm, error);
+                }
+            }
+        });
     }
 
     private void onUpdateFinished() {
-        if (this.callback != null) {
-            this.callback.onUpdateFinished(this);
-        }
+        final PackageManager pm = PackageManager.sharedInstance();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.onUpdateFinished(pm);
+                }
+            }
+        });
     }
 
-    private void onUpdateError(PackageError error) {
-        if (this.callback != null) {
-            this.callback.onUpdateError(this, error);
-        }
+    private void onUpdateError(final PackageError error) {
+        final PackageManager pm = PackageManager.sharedInstance();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.onUpdateError(pm, error);
+                }
+            }
+        });
     }
 }
