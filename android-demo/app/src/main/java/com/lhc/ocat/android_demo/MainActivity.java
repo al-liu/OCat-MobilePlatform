@@ -1,6 +1,7 @@
 package com.lhc.ocat.android_demo;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lhc.ocat.android_demo.manager.Callback;
 import com.lhc.ocat.android_demo.manager.PackageError;
@@ -20,10 +22,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String PRE_PACKAGE_VERSION = "1.0.0";
     private static final String ONLINE_URL = "http://192.168.1.118:8080";
     public static final String ACTIVITY_INTENT_URL_KEY = "ACTIVITY_INTENT_URL_KEY";
-    public static final String ACTIVITY_INTENT_CLEAR_CACHE_KEY = "ACTIVITY_INTENT_URL_KEY";
-    private boolean clearCacheFlag = false;
 
     private TextView currentTextView;
+    private ProgressDialog progressDialog;
+
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(onlineIntent);
                 break;
             case R.id.updatePatch:
+                showLoading("正在更新补丁");
                 PackageManager.sharedInstance().updateLatestPatch(MainActivity.this);
                 break;
             case R.id.clearCache:
@@ -81,22 +84,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onLaunchFinished(PackageManager packageManager) {
             Log.i(TAG, "onLaunchFinished");
             currentTextView.setText(String.format("当前版本:%s", packageManager.getActivePackageVersion(MainActivity.this)));
+            Toast.makeText(MainActivity.this, "包管理器启动完成", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onLaunchError(PackageManager packageManager, PackageError error) {
             Log.i(TAG, "onLaunchError:"+error.toString());
+            Toast.makeText(MainActivity.this, "包管理器启动失败,"+error.getReason(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onUpdateFinished(PackageManager packageManager) {
             Log.i(TAG, "onUpdateFinished");
-            currentTextView.setText(String.format("当前版本:%s", packageManager.getActivePackageVersion(MainActivity.this)));
+            String version = packageManager.getActivePackageVersion(MainActivity.this);
+            String text = String.format("当前版本:%s", version);
+            hideLoading();
+            Toast.makeText(MainActivity.this, "更新完成,"+text, Toast.LENGTH_SHORT).show();
+            currentTextView.setText(text);
         }
 
         @Override
         public void onUpdateError(PackageManager packageManager, PackageError error) {
             Log.i(TAG, "onUpdateError:" + error.toString());
+            Toast.makeText(MainActivity.this, "更新失败,"+error.getReason(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLoading(String text) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        progressDialog.setMessage(text);
+        progressDialog.setCancelable(true);
+        progressDialog.show();
+    }
+
+    private void hideLoading() {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
     }
 }
