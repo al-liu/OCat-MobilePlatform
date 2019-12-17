@@ -62,7 +62,9 @@ public class Patch {
     static public Patch toPatch(PatchDO patchDO) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(patchDO.getData(), Patch.class);
+            Patch patch = objectMapper.readValue(patchDO.getData(), Patch.class);
+            patch.setUrl(patchDO.getUrl());
+            return patch;
         } catch (IOException e) {
             e.printStackTrace();
         }
