@@ -20,9 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service
-            android:name=".manager.AppWebCoreService"
-            android:exported="false"/>
+        <activity android:name=".WebActivity">
+        </activity>
     </application>
 
 </manifest>

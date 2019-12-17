@@ -17,6 +17,7 @@ package com.lhc.ocat.android_demo.manager;
 
 import android.accounts.NetworkErrorException;
 import android.os.Handler;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -40,6 +41,7 @@ import java.util.regex.Pattern;
  */
 class NetUtils {
 
+    private static final String TAG = "NetUtils";
     /**
      * Ipv4 address check.
      */
@@ -142,6 +144,18 @@ class NetUtils {
     }
 
     static void download(final String url, final File destination, final DownloadCallback callback) {
+        if (!destination.exists()) {
+            if (!destination.getParentFile().exists()) {
+                boolean mkdirsResult = destination.getParentFile().mkdirs();
+                Log.d(TAG, "下载补丁的 destination 创建 getParentFile 是否成功:"+mkdirsResult);
+            }
+            try {
+                boolean mkFileResult = destination.createNewFile();
+                Log.d(TAG, "下载补丁的 destination 创建 createNewFile 是否成功:"+mkFileResult);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         final Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
