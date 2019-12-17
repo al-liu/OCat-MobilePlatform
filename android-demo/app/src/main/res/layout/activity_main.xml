@@ -54,6 +54,7 @@
     <Button
         android:id="@+id/clearCache"
         android:text="@string/clear_cache_text"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/updatePatch"
