@@ -89,6 +89,15 @@ static OCatPackageManager *_instance = nil;
 - (void)launch {
     if (self.configuration == nil) {
         DDLogError(@"离线包管理器没有配置类无法使用");
+        NSDictionary *userInfo = @{
+          NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器启动失败", nil),
+          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"离线包管理器没有配置类无法使用", nil),
+          NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"使用 manageWithConfiguration 方法初始化管理器", nil)
+                                  };
+        NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                             code:-7
+                                         userInfo:userInfo];
+        [self ocat_delegateDidFailLaunchingWithError:error];
         return;
     }
     DDLogInfo(@"🚀启动离线包管理");
@@ -115,6 +124,15 @@ static OCatPackageManager *_instance = nil;
 - (void)updateLatestPatch {
     if (self.configuration == nil) {
         DDLogError(@"离线包管理器没有配置类无法使用");
+        NSDictionary *userInfo = @{
+          NSLocalizedDescriptionKey: NSLocalizedString(@"包管理器启动失败", nil),
+          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"离线包管理器没有配置类无法使用", nil),
+          NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"使用 manageWithConfiguration 方法初始化管理器", nil)
+                                  };
+        NSError *error = [NSError errorWithDomain:OCatErrorDomain
+                                             code:-7
+                                         userInfo:userInfo];
+        [self ocat_delegateDidFailLaunchingWithError:error];
         return;
     }
     [self ocat_checkPatchResource];
