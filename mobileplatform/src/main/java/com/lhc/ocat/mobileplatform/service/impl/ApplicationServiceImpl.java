@@ -16,11 +16,9 @@ import com.lhc.ocat.mobileplatform.mapper.PatchMapper;
 import com.lhc.ocat.mobileplatform.mapper.ResourceMapper;
 import com.lhc.ocat.mobileplatform.publishpackage.PublishPackage;
 import com.lhc.ocat.mobileplatform.service.ApplicationService;
-import com.lhc.ocat.mobileplatform.service.PublishPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.plugin2.main.server.AppletID;
 
 import java.util.*;
 import java.util.stream.Collectors;
