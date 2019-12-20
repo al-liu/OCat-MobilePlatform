@@ -1,0 +1,27 @@
+server:
+  port: 8800
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ocat?useSSL=false&autoReconnect=true
+    username: root
+    password: root
+logging:
+  level:
+    com:
+      lhc:
+        ocat: DEBUG
+com:
+  lhc:
+    ocat:
+      mobileplatform:
+        max-diff-count: 3 # 最大差量比较的版本个数（新版本包与之前多个旧版本包差量比较）
+        workshop-path: /Users/lhc/Documents/WorkSpace/Projects/GitHub/OCat-MobilePlatform/mobileplatform/workshop # 差量比较工作目录
+        online-url: http://localhost:8080
+        package-download-path: /Users/lhc/Documents/WorkSpace/Projects/GitHub/OCat-MobilePlatform/docker/nginx/html/download/packages # 可以放到云上
+        online-version-path: /Users/lhc/Documents/WorkSpace/Projects/GitHub/OCat-MobilePlatform/docker/nginx/html/online
+        prep-online-version-path: /Users/lhc/Documents/WorkSpace/Projects/GitHub/OCat-MobilePlatform/docker/nginx/html/preview
