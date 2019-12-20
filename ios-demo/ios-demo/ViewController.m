@@ -13,7 +13,7 @@
 #import <WebKit/WebKit.h>
 #import "SVProgressHUD.h"
 
-static NSString *const kOnlineServerUrl = @"http://localhost:8080";
+static NSString *const kOnlineServerUrl = @"http://49.233.169.151:8080";
 
 @interface ViewController () <OCatPackageManagerDelegate>
 

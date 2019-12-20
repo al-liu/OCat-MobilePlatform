@@ -21,9 +21,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setupLog];
-    OCatConfiguration *configuration = [OCatConfiguration initWithAppId:@"8405288128"
-                                                              appSecret:@"c9663f262eb24fe3a859f0113c98efca"
-                                                          serverBaseUrl:@"http://localhost:8800"
+    OCatConfiguration *configuration = [OCatConfiguration initWithAppId:@"4647353240"
+                                                              appSecret:@"961342212c52428ca1d33df94cbcf441"
+                                                          serverBaseUrl:@"http://49.233.169.151:9090"
                                                   inbuiltPackageVersion:@"1.0.0"];
     OCatPackageManager *packageManager = [OCatPackageManager manageWithConfiguration:configuration];
     [packageManager launch];
