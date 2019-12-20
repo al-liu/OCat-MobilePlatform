@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "MainActivity";
     private static final String PRE_PACKAGE_VERSION = "1.0.0";
-    private static final String ONLINE_URL = "http://192.168.1.118:8080";
+    private static final String ONLINE_URL = "http://49.233.169.151:8080";
     public static final String ACTIVITY_INTENT_URL_KEY = "ACTIVITY_INTENT_URL_KEY";
 
     private TextView currentTextView;
@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         PackageSettings packageSettings = new PackageSettings(
-                "8405288128",
-                "c9663f262eb24fe3a859f0113c98efca",
-                "http://192.168.1.118:8800",
+                "4647353240",
+                "961342212c52428ca1d33df94cbcf441",
+                "http://49.233.169.151:9090",
                 PRE_PACKAGE_VERSION);
         PackageManager.manageWithSettings(packageSettings).launch(MainActivity.this);
 
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onUpdateError(PackageManager packageManager, PackageError error) {
             Log.i(TAG, "onUpdateError:" + error.toString());
+            hideLoading();
             Toast.makeText(MainActivity.this, "更新失败,"+error.getReason(), Toast.LENGTH_SHORT).show();
         }
     }
