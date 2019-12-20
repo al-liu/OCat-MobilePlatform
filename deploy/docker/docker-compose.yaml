@@ -1,0 +1,46 @@
+version: '3'
+services:
+  nginx:
+    container_name: ocat-nginx
+    image: nginx
+    restart: always
+    ports:
+      - 8880:80
+      - 8080:8080
+      - 8081:8081
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    environment:
+      - TZ=Asia/Shanghai
+  mysql:
+    container_name: ocat-mysql
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_DATABASE: ocat
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      TZ: Asia/Shanghai
+    command: [
+            '--character-set-server=utf8mb4',
+            '--collation-server=utf8mb4_unicode_ci',
+            '--default-time-zone=+8:00'
+    ]
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql
+  mp:
+    container_name: ocat-mp
+    image: ocat-mp:0.0.1
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./mobileplatform/logs:/app/logs
+      - ./nginx/html:/app/html
+    depends_on:
+      - nginx
+      - mysql
