@@ -92,7 +92,7 @@ public class DemoPublishPackage extends AbstractPublishPackage {
             toMoveFile.getParentFile().mkdirs();
         }
         Files.move(zipPackageFile, toMoveFile);
-        return "http://192.168.1.104:8080/"
+        return "http://49.233.169.151:8080/"
                 + "download/packages/"
                 + applicationDO.getAppId()
                 + "/" + versionName
