@@ -226,3 +226,4 @@ Example/iOS Example/iOS Example.xcodeproj/project.xcworkspace/xcuserdata/lhc.xcu
 /build
 /captures
 .externalNativeBuild
+*.tar
