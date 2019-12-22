@@ -1,11 +1,11 @@
 server:
-  port: 8800
+  port: 9090
 spring:
   application:
     name: mobileplatform-server
   profiles:
     active:
-      default
+      dev
 mybatis-plus:
   mapper-locations: classpath:/mybatis/mapper/*Mapper.xml
   type-aliases-package: com.lhc.ocat.mobileplatform.domain.dos
